@@ -176,13 +176,13 @@ async def _extract(text: str, ref: date, role: Role, *, allow_base: bool = True)
 
 
 @app.post("/api/extract", dependencies=[Depends(require_key)])
-@limiter.limit("30/minute")
+@limiter.limit("30/minute;300/day")  # also protects the shared fallback quota
 async def extract(request: Request, body: ExtractIn) -> dict[str, Any]:
     return await _extract(body.text, body.reference_date or date.today(), body.model)
 
 
 @app.post("/api/compare", dependencies=[Depends(require_key)])
-@limiter.limit("30/minute")
+@limiter.limit("30/minute;300/day")
 async def compare(request: Request, body: CompareIn) -> dict[str, Any]:
     ref = body.reference_date or date.today()
     base, student = await asyncio.gather(

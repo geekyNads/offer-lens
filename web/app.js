@@ -190,6 +190,7 @@ async function runExtract() {
       ...(r.fallback ? [el("span", { class: "tag line", text: r.provider === "openrouter" ? "fallback · hosted API" : "fallback" })] : []),
     );
     $("receipt").replaceChildren(receipt(r.extraction));
+    if (r.provider === "openrouter") $("receipt").prepend(el("p", { class: "meta", text: "Our GPU server is unavailable, so this text was processed by a third-party API (OpenRouter)." }));
     lastJson = jsonTokens(r.extraction ?? { error: "schema validation failed" });
     if (r.extraction) renderSource(text, r.extraction); else $("source-block").hidden = true;
     $("result").hidden = false;

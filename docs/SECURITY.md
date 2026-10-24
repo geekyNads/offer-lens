@@ -44,3 +44,21 @@ into a browser. Protect the model server, the browser, the data, and the supply 
 - Tests: schema validators, metric math (hand-computed cases), prompt rendering, API validation & headers (TestClient with SGLang mocked).
 - `docs/DECISIONS.md` logs every shortcut so future-you can pay it back.
 - License: Lexsi kits are source-available, non-commercial by default — note before any DealFeed production use.
+
+## 7. Hosted model and fallback (online demo)
+- **Hosted SGLang (Modal):** the server binds `0.0.0.0` only inside its container so Modal's proxy can reach it.
+  SGLang's `--api-key` guards every request, and `deploy/modal_sglang.py` refuses to start with a key shorter than
+  32 characters. The key lives only in the Modal secret `offerlens-sglang` and the Vercel env var `SGLANG_API_KEY`.
+- **App-side checks (`settings.py`):** a remote SGLang URL must be `https`, must not carry credentials, a query or
+  a fragment, and requires `SGLANG_API_KEY` (32 or more characters). Otherwise the app refuses to start, so a
+  misconfiguration can't silently send traffic to an open or plaintext endpoint.
+- **OpenRouter fallback:** offer text goes to a third party. Requests set `provider.data_collection` from
+  `OPENROUTER_DATA_COLLECTION` (default `deny`: only providers that don't store or train on prompts) and
+  `require_parameters: true`, so the JSON-schema constraint is never silently dropped. The output passes the same
+  Pydantic validation. The UI tells the user when the fallback processed their text.
+- **Quota protection:** `/api/extract` and `/api/compare` allow 30 requests a minute and 300 a day per IP, so one
+  visitor can't burn the shared free GPU credits or the OpenRouter daily quota.
+- **Cost cap:** set a Modal workspace budget equal to the free credits. When it's hit the GPU stops and the app
+  falls back. It never bills past the budget.
+- **Secrets:** API keys are set as sensitive Vercel env vars and the Modal secret, never in the repo.
+  `.env.example` lists names only. Upstream error bodies are never echoed to clients.
