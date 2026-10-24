@@ -203,6 +203,9 @@ server that fails is skipped for 60 seconds, so visitors don't wait out a cold s
 2. OpenRouter: create an API key at https://openrouter.ai/keys. Free models allow 50 requests a day
    (1,000 a day after buying $10 of credits). The free list changes; pick one that supports structured outputs
    at https://openrouter.ai/models?supported_parameters=structured_outputs and set `OPENROUTER_MODEL`.
+   By default only providers that don't store or train on prompts are used. If OpenRouter returns "no endpoints
+   found" for your free model, either pick another model or set `OPENROUTER_DATA_COLLECTION=allow`, knowing the
+   provider may then log the offer text.
 
 3. Vercel: add the variables (mark the keys as sensitive), then redeploy:
 
@@ -262,6 +265,12 @@ docs/             PLAN, SPEC, DATA, TRAINING, EVAL, DESIGN, SECURITY, DECISIONS,
 - The frontend renders model output with `textContent` only, never `innerHTML`.
 - Logs record a SHA-256 hash of the input, not the raw text.
 - Model revisions are pinned, `trust_remote_code` is always false, and weights are safetensors only.
+- Hosted model: a remote SGLang URL must be `https` and needs an `SGLANG_API_KEY` of 32 or more characters, or the
+  app refuses to start. The Modal server refuses to start without the key.
+- OpenRouter fallback: only providers that don't store or train on prompts are used (`OPENROUTER_DATA_COLLECTION=deny`,
+  the default), the JSON schema is required, and the UI tells users when their text went to the third-party API.
+- Extract and Compare are capped at 30 requests a minute and 300 a day per IP, protecting the free GPU credits and
+  the fallback quota.
 
 Full list: `docs/SECURITY.md`.
 

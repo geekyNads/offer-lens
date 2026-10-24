@@ -72,12 +72,14 @@ def wait_ready(process: subprocess.Popen, timeout: int = 15 * MINUTES) -> None:
 class OfferLensSGLang:
     @modal.enter()
     def startup(self) -> None:
+        if len(os.environ.get("SGLANG_API_KEY", "")) < 32:  # never serve an open endpoint
+            raise RuntimeError("SGLANG_API_KEY must be at least 32 characters")
         cmd = [
             "python", "-m", "sglang.launch_server",
             "--model-path", MODEL,
             "--revision", REVISION,
             "--served-model-name", SERVED_NAME,
-            "--host", "0.0.0.0",
+            "--host", "0.0.0.0",  # inside the container, for Modal's proxy; --api-key guards it
             "--port", str(PORT),
             "--api-key", os.environ["SGLANG_API_KEY"],
             "--grammar-backend", "xgrammar",

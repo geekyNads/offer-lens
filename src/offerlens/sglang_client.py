@@ -185,7 +185,10 @@ async def aextract_openrouter(client: httpx.AsyncClient, text: str, reference_da
         raise httpx.ConnectError("OpenRouter fallback is not configured")
     body = payload("base", prompt.messages(text, reference_date), constrained=True)
     body["model"] = settings.openrouter_model
-    body["provider"] = {"require_parameters": True}  # only providers that honour response_format
+    body["provider"] = {
+        "require_parameters": True,  # only providers that honour response_format
+        "data_collection": settings.openrouter_data_collection,
+    }
     t0 = time.perf_counter()
     resp = await client.post(
         OPENROUTER_URL,
