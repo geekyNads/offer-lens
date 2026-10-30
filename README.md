@@ -288,5 +288,6 @@ example inside DealFeed production) needs a license from Lexsi Labs. Check each 
 ## Devlopers
 
 1. M. Likhit Naidu
-2. Mustafiz Ahmed
-3. Chitturi Srikar
+2. Mayank Raja
+3. Mustafiz Ahmed
+4. Chitturi Srikar
