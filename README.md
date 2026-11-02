@@ -275,7 +275,6 @@ Full list: `docs/SECURITY.md`.
 - The data verification gate is a deterministic fact-presence check rather than the teacher round-trip in
   `docs/DATA.md`. See `docs/DECISIONS.md` for why.
 - The real DealFeed test set (30 hand-labelled offers) still needs to be built.
-- Unit tests and CI are not written yet.
 - The online demo runs the **base** 1.5B with grammar constraints (or the OpenRouter fallback). The fine-tuned model is not hosted until training has run.
 
 The full list is in `docs/EVAL.md`, and every shortcut is logged in `docs/DECISIONS.md`.
@@ -286,7 +285,6 @@ CuratorKIT and AlignTune are source-available for non-commercial use. Commercial
 example inside DealFeed production) needs a license from Lexsi Labs. Check each kit's LICENSE.
 
 ## Devlopers
-
 1. M. Likhit Naidu
 2. Mayank Raja
 3. Mustafiz Ahmed
