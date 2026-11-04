@@ -1,4 +1,4 @@
-# OfferLens
+# OfferLens(Not Maintainig)
 
 Messy Indian deal text in, schema-valid JSON out, on a fine-tuned 1.5B open model served by SGLang.
 
